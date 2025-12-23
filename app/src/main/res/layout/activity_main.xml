@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/img_idcard"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:background="#EEEEEE" />
+
+    <Button
+        android:id="@+id/btn_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择身份证图片"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/btn_recognize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开始识别"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="等待选择图片"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"/>
+</LinearLayout>
