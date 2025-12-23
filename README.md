@@ -80,6 +80,7 @@ sdk.dir=D\:\\AndroidSDK
 
 TENCENT_SECRET_ID=你的SecretId
 TENCENT_SECRET_KEY=你的SecretKey
+```
 说明：
 
 - `local.properties` 已被加入 `.gitignore`
@@ -88,7 +89,7 @@ TENCENT_SECRET_KEY=你的SecretKey
 
 ---
 
-### （2）Gradle 注入到 BuildConfig
+#### （2）Gradle 注入到 BuildConfig
 
 在 `app/build.gradle` 中读取并注入密钥：
 
@@ -100,13 +101,15 @@ buildConfigField "String",
 buildConfigField "String",
         "TENCENT_SECRET_KEY",
         "\"${localProps['TENCENT_SECRET_KEY']}\""
-### （3）代码中安全使用密钥
+```
+#### （3）代码中安全使用密钥
 
 在 `OcrApi.java` 中通过 `BuildConfig` 读取密钥：
 
 ```java
 private static final String SECRET_ID = BuildConfig.TENCENT_SECRET_ID;
 private static final String SECRET_KEY = BuildConfig.TENCENT_SECRET_KEY;
+```
 源码中不包含任何真实密钥信息，可安全公开仓库。
 
 ---
@@ -131,10 +134,11 @@ private static final String SECRET_KEY = BuildConfig.TENCENT_SECRET_KEY;
 ## 八、适用说明
 
 - 本项目仅用于学习、教学和课程实验用途  
-- OCR 接口调用会产生腾讯云 API 调用费用，请注意账户余额  
+- OCR 接口调用会产生腾讯云 API 调用费用，请注意账户余额（每月免费一千次）  
 
 ---
 
 ## 九、License
 
 本项目仅供学习与交流使用
+
