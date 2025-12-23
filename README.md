@@ -1,76 +1,140 @@
-# 📇 Android 身份证 OCR 识别系统（基于腾讯云 OCR）
+# Android 身份证 OCR 识别系统（基于腾讯云 OCR）
 
-## 📌 项目简介
+## 一、项目简介
 
-本项目是一个基于 **Android Studio** 开发的身份证识别应用，  
-通过调用 **腾讯云 OCR 身份证识别接口（IDCardOCR，签名方式 v3）**，  
+本项目是一个基于 Android Studio 开发的身份证识别应用。  
+通过调用腾讯云 OCR 身份证识别接口（IDCardOCR，API v3 签名方式），  
 实现从手机相册选择身份证图片，并自动识别身份证中的关键信息。
 
-项目完整实现了：
+项目完整实现了从 Android 客户端到云端 OCR 服务的完整调用流程，包括：
 
-- Android UI 界面
+- Android 用户界面设计
 - 图片选择与 Base64 编码
-- 腾讯云 API v3 签名
+- 腾讯云 API v3 签名算法（非 SDK，手动实现）
 - OkHttp 网络请求
 - JSON 数据解析
-- OCR 结果展示
+- OCR 识别结果展示
 
-适用于 **Android 开发课程设计 / 实验 / OCR 学习示例**。
-
----
-
-## ✨ 功能特性
-
-- 📷 从相册选择身份证照片
-- 🔄 支持身份证 **正面 / 反面** 识别
-- 🔐 使用腾讯云 **v3 签名算法**（非 SDK，手写实现）
-- 🌐 使用 **OkHttp3** 发送 HTTPS 请求
-- 📄 解析 OCR 返回 JSON 数据
-- 🪪 显示姓名、身份证号、性别、民族、住址等信息
-- 🧪 支持 Android 模拟器与真机运行
+适用于 Android 开发课程设计、实验报告以及 OCR 技术学习示例。
 
 ---
 
-## 🛠️ 技术栈
+## 二、功能特性
 
-| 模块 | 技术 |
-|----|----|
-| 开发语言 | Java |
-| 开发工具 | Android Studio |
-| 网络请求 | OkHttp 3 |
-| OCR 服务 | 腾讯云 OCR（IDCardOCR） |
-| 签名方式 | 腾讯云 API v3 |
-| 数据格式 | JSON |
-| 最低支持 | Android API 24 |
+- 从手机相册选择身份证照片
+- 支持身份证正面与反面识别
+- 使用腾讯云 API v3 签名算法进行身份认证
+- 通过 OkHttp 发送 HTTPS 请求
+- 解析并处理 OCR 返回的 JSON 数据
+- 在界面中展示姓名、身份证号、性别、民族、住址等信息
+- 支持 Android 模拟器与真机运行
 
 ---
 
-## 📱 应用界面说明
+## 三、技术栈
 
-1. 主界面提供「选择身份证图片」按钮  
-2. 用户从相册选择身份证照片  
-3. 点击「开始识别」  
+- 开发语言：Java  
+- 开发工具：Android Studio  
+- 网络请求：OkHttp 3  
+- OCR 服务：腾讯云 OCR（IDCardOCR）  
+- 签名方式：腾讯云 API v3  
+- 数据格式：JSON  
+- 最低支持系统：Android API 24  
+
+---
+
+## 四、应用流程说明
+
+1. 启动应用，进入主界面  
+2. 点击“选择身份证图片”，从相册中选择照片  
+3. 点击“开始识别”  
 4. 应用向腾讯云 OCR 接口发送请求  
-5. 返回识别结果并展示在界面中  
+5. 接收并解析识别结果  
+6. 在界面中展示身份证信息  
 
 ---
 
-## 🔑 使用前准备
+## 五、使用前准备
 
-### 1️⃣ 开通腾讯云 OCR 服务
+### 5.1 开通腾讯云 OCR 服务
 
-- 注册腾讯云账号
-- 开通 **OCR → 身份证识别**
-- 获取：
-  - `SecretId`
-  - `SecretKey`
+1. 注册腾讯云账号  
+2. 开通 OCR 服务中的“身份证识别（IDCardOCR）”  
+3. 获取以下密钥信息：
+   - SecretId
+   - SecretKey
 
 ---
 
-### 2️⃣ 配置密钥（必须）
+### 5.2 本地密钥配置（重要）
 
-在 `OcrApi.java` 中填写你自己的密钥：
+本项目不会在源码中明文存储任何密钥信息。  
+密钥通过 `local.properties + BuildConfig` 的方式注入，仅存在于本地环境。
+
+#### （1）创建 local.properties 文件
+
+在项目根目录创建 `local.properties` 文件，内容如下：
+
+```properties
+sdk.dir=D\:\\AndroidSDK
+
+TENCENT_SECRET_ID=你的SecretId
+TENCENT_SECRET_KEY=你的SecretKey
+说明：
+
+- `local.properties` 已被加入 `.gitignore`
+- 该文件不会被提交到 GitHub
+- 每台电脑需要单独配置自己的密钥
+
+---
+
+### （2）Gradle 注入到 BuildConfig
+
+在 `app/build.gradle` 中读取并注入密钥：
+
+```gradle
+buildConfigField "String",
+        "TENCENT_SECRET_ID",
+        "\"${localProps['TENCENT_SECRET_ID']}\""
+
+buildConfigField "String",
+        "TENCENT_SECRET_KEY",
+        "\"${localProps['TENCENT_SECRET_KEY']}\""
+### （3）代码中安全使用密钥
+
+在 `OcrApi.java` 中通过 `BuildConfig` 读取密钥：
 
 ```java
-private static final String SECRET_ID = "你的SecretId";
-private static final String SECRET_KEY = "你的SecretKey";
+private static final String SECRET_ID = BuildConfig.TENCENT_SECRET_ID;
+private static final String SECRET_KEY = BuildConfig.TENCENT_SECRET_KEY;
+源码中不包含任何真实密钥信息，可安全公开仓库。
+
+---
+
+## 六、运行项目
+
+1. 克隆本项目仓库  
+2. 在项目根目录创建并配置 `local.properties`  
+3. 使用 Android Studio 同步 Gradle  
+4. 运行项目到模拟器或真机  
+
+---
+
+## 七、安全说明
+
+- 请勿将 `SecretId` 或 `SecretKey` 写入 Java 源码  
+- 请勿提交 `local.properties` 文件到 GitHub  
+- 使用 `.gitignore + BuildConfig` 是推荐的安全做法  
+
+---
+
+## 八、适用说明
+
+- 本项目仅用于学习、教学和课程实验用途  
+- OCR 接口调用会产生腾讯云 API 调用费用，请注意账户余额  
+
+---
+
+## 九、License
+
+本项目仅供学习与交流使用
