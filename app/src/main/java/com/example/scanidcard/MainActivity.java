@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 识别按钮
         btnRecognize.setOnClickListener(v -> {
+
             if (imageBase64 == null) {
                 tvInfo.setText("请先选择身份证图片");
                 return;

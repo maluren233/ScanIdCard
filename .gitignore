@@ -1,0 +1,2 @@
+# 忽略本地配置文件，防止密钥泄露
+local.properties

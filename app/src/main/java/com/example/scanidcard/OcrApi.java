@@ -6,12 +6,14 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import com.example.scanidcard.BuildConfig;
+
 
 public class OcrApi {
 
     // ===== 腾讯云id和密钥 =====
-    private static final String SECRET_ID = "用你的SecretId";  //这两处改成自己的id和密钥，作者maluren的信息保密
-    private static final String SECRET_KEY = "用你的SecretKey";  //别想用我的腾讯云账号
+    private static final String SECRET_ID = BuildConfig.TENCENT_SECRET_ID;  //这两处改成自己的id和密钥，作者maluren的信息保密
+    private static final String SECRET_KEY = BuildConfig.TENCENT_SECRET_KEY;  //别想用我的腾讯云账号
 
     private static final String SERVICE = "ocr";
     private static final String HOST = "ocr.tencentcloudapi.com";

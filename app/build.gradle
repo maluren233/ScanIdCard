@@ -2,9 +2,26 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+// ===== 读取 local.properties =====
+def localProps = new Properties()
+def localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    println("local.properties 找到啦")
+    localProps.load(new FileInputStream(localPropsFile))
+} else {
+    println("⚠️ local.properties 没找到！")
+}
+println("SECRET_ID=" + localProps['TENCENT_SECRET_ID'])
+println("SECRET_KEY=" + localProps['TENCENT_SECRET_KEY'])
+
+
 android {
     namespace 'com.example.scanidcard'
     compileSdk 34
+
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         applicationId "com.example.scanidcard"
@@ -14,6 +31,16 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // ===== 从 local.properties 读取腾讯云密钥，并注入到 BuildConfig 中 =====
+        // 这样在 Java 代码中可以通过 BuildConfig.TENCENT_SECRET_ID / KEY 直接使用
+        buildConfigField "String",
+                "TENCENT_SECRET_ID",
+                "\"${localProps['TENCENT_SECRET_ID']}\""
+
+        buildConfigField "String",
+                "TENCENT_SECRET_KEY",
+                "\"${localProps['TENCENT_SECRET_KEY']}\""
     }
 
     buildTypes {
